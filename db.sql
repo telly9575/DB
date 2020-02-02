@@ -79,6 +79,7 @@ ALTER DATABASE [dbShoppingForum] SET QUERY_STORE = OFF
 GO
 USE [dbShoppingForum]
 GO
+/****** Object:  商品分類表 (供商品檢索&分類用) ******/
 /****** Object:  Table [dbo].[tCategory]    Script Date: 2020/1/30 下午 04:20:43 ******/
 SET ANSI_NULLS ON
 GO
@@ -93,6 +94,7 @@ CREATE TABLE [dbo].[tCategory](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+/****** Object:  商品精油功效表 (供商品檢索&分類用) ******/
 /****** Object:  Table [dbo].[tEfficacy]    Script Date: 2020/1/30 下午 04:20:43 ******/
 SET ANSI_NULLS ON
 GO
@@ -218,6 +220,7 @@ CREATE TABLE [dbo].[tForumReplyAnalysis](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+/****** Object:  商品精油香調表 (供商品檢索&分類用) ******/
 /****** Object:  Table [dbo].[tNote]    Script Date: 2020/1/30 下午 04:20:43 ******/
 SET ANSI_NULLS ON
 GO
@@ -280,6 +283,7 @@ CREATE TABLE [dbo].[tOrderDetail](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+/****** Object:  商品精油萃取部位表 (供商品檢索&分類用) ******/
 /****** Object:  Table [dbo].[tPart]    Script Date: 2020/1/30 下午 04:20:43 ******/
 SET ANSI_NULLS ON
 GO
@@ -294,6 +298,7 @@ CREATE TABLE [dbo].[tPart](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+/****** Object:  商品功效關聯表(一對多) ******/
 /****** Object:  Table [dbo].[tProdEfficacyRelation]    Script Date: 2020/1/30 下午 04:20:43 ******/
 SET ANSI_NULLS ON
 GO
@@ -309,6 +314,7 @@ CREATE TABLE [dbo].[tProdEfficacyRelation](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+/****** Object:  商品主表 ******/
 /****** Object:  Table [dbo].[tProduct]    Script Date: 2020/1/30 下午 04:20:43 ******/
 SET ANSI_NULLS ON
 GO
@@ -333,6 +339,7 @@ CREATE TABLE [dbo].[tProduct](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
+/****** Object:  商品圖片表(尚未新增資料) ******/
 /****** Object:  Table [dbo].[tProductImage]    Script Date: 2020/1/30 下午 04:20:43 ******/
 SET ANSI_NULLS ON
 GO
