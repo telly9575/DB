@@ -237,6 +237,12 @@ CREATE TABLE [dbo].[tNote](
 GO
 
 /****** Object:  訂單主表 ******/
+/****** 刪除[fOrderCheck]欄位   Edit Date: 2020/2/03 下午 02:15:43******/
+/****** 更改[fOrderDate]資料型態   Edit Date: 2020/2/03 下午 02:15:43******/
+/****** 更改[fShippedDate]]資料型態   Edit Date: 2020/2/03 下午 02:15:43******/
+/****** 更改[fRequiredDate]資料型態   Edit Date: 2020/2/03 下午 02:15:43******/
+/****** 更改[fOrderPostScript]資料型態   Edit Date: 2020/2/03 下午 02:15:43******/
+/****** 更改[fConsigneeName]資料型態   Edit Date: 2020/2/03 下午 02:15:43******/
 /****** Object:  Table [dbo].[tOrder]    Script Date: 2020/1/30 下午 04:20:43 ******/
 SET ANSI_NULLS ON
 GO
@@ -245,18 +251,18 @@ GO
 CREATE TABLE [dbo].[tOrder](
 	[fOrderId] [bigint] NOT NULL,
 	[fUserId] [nvarchar](20) NOT NULL,
-	[fOrderDate] [datetimeoffset](7) NOT NULL,
-	[fShippedDate] [datetimeoffset](7) NULL,
-	[fRequiredDate] [datetimeoffset](7) NULL,
+	[fOrderDate][datetime] NOT NULL,
+	[fShippedDate] [datetime] NULL,
+	[fRequiredDate] [datetime] NULL,
 	[fScore] [int] NULL,
-	[fOrderCheck] [bit] NULL,
-	[fConsigneeName] [nchar](10) NULL,
+	[fConsigneeName] [nvarchar](20) NULL,
 	[fConsigneeTelephone] [nvarchar](50) NULL,
 	[fConsigneeCellPhone] [nvarchar](50) NULL,
 	[fConsigneeAddress] [nvarchar](50) NULL,
+	[fConsigneeAreUser] [bit] NULL,
 	[fOrderCompanyTitle] [nvarchar](50) NULL,
 	[fOrderTaxIdDNumber] [int] NULL,
-	[fOrderPostScript] [nvarchar](50) NULL,
+	[fOrderPostScript] [nvarchar](max) NULL,
  CONSTRAINT [PK_tOrder] PRIMARY KEY CLUSTERED 
 (
 	[fOrderId] ASC
@@ -265,6 +271,7 @@ CREATE TABLE [dbo].[tOrder](
 GO
 
 /****** Object:  訂單明細表 ******/
+/****** 刪除[fOrderDetailCheck]欄位   Edit Date: 2020/2/03 下午 02:15:43******/
 /****** Object:  Table [dbo].[tOrderDetail]    Script Date: 2020/1/30 下午 04:20:43 ******/
 SET ANSI_NULLS ON
 GO
@@ -276,7 +283,6 @@ CREATE TABLE [dbo].[tOrderDetail](
 	[fProductId] [int] NOT NULL,
 	[fOrderQuantity] [int] NULL,
 	[fPayment] [nvarchar](50) NULL,
-	[fOrderDetailCheck] [bit] NULL,
  CONSTRAINT [PK_tOrderDetail] PRIMARY KEY CLUSTERED 
 (
 	[fOrderDetailId] ASC
