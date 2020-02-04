@@ -697,20 +697,27 @@ REFERENCES [dbo].[tProduct] ([fProductID])
 GO
 ALTER TABLE [dbo].[tProdEfficacyRelation] CHECK CONSTRAINT [FK_tProdEfficacyRelation_tProduct]
 GO
---ALTER TABLE [dbo].[tProduct]  WITH CHECK ADD  CONSTRAINT [FK_tProduct_tCategory] FOREIGN KEY([fCategoryID])
---REFERENCES [dbo].[tCategory] ([fCategoryID])
---GO
---ALTER TABLE [dbo].[tProduct] CHECK CONSTRAINT [FK_tProduct_tCategory]
---GO
---ALTER TABLE [dbo].[tProduct]  WITH CHECK ADD  CONSTRAINT [FK_tProduct_tNote] FOREIGN KEY([fNoteID])
---REFERENCES [dbo].[tNote] ([fNoteID])
---GO
---ALTER TABLE [dbo].[tProduct] CHECK CONSTRAINT [FK_tProduct_tNote]
---GO
---ALTER TABLE [dbo].[tProduct]  WITH CHECK ADD  CONSTRAINT [FK_tProduct_tPart] FOREIGN KEY([fPartID])
---REFERENCES [dbo].[tPart] ([fPartID])
---GO
-ALTER TABLE [dbo].[tProduct] CHECK CONSTRAINT [FK_tProduct_tPart]
+ALTER TABLE [dbo].[tProduct]  WITH CHECK ADD  CONSTRAINT [FK_tProduct_tCategory] FOREIGN KEY([fCategoryID])
+REFERENCES [dbo].[tCategory] ([fCategoryID])
+GO
+
+ALTER TABLE [dbo].[tProductUnilateral]  WITH CHECK ADD  CONSTRAINT [FK_tProductUnilateral_tNote] FOREIGN KEY([fNoteID])
+REFERENCES [dbo].[tNote] ([fNoteID])
+GO
+ALTER TABLE [dbo].[tProductUnilateral] CHECK CONSTRAINT [FK_tProductUnilateral_tNote]
+GO
+ALTER TABLE [dbo].[tProductUnilateral]  WITH CHECK ADD  CONSTRAINT [FK_tProductUnilateral_tPart] FOREIGN KEY([fPartID])
+REFERENCES [dbo].[tPart] ([fPartID])
+GO
+ALTER TABLE [dbo].[tProductUnilateral] CHECK CONSTRAINT [FK_tProductUnilateral_tPart]
+GO
+ALTER TABLE [dbo].[tProductVegetableoil]  WITH CHECK ADD  CONSTRAINT [FK_tProductVegetableoil_tfeature] FOREIGN KEY([fProductID])
+REFERENCES [dbo].[tfeature] ([ffeatureID])
+GO
+ALTER TABLE [dbo].[tProductVegetableoil] CHECK CONSTRAINT [FK_tProductVegetableoil_tfeature]
+GO
+
+
 GO
 ALTER TABLE [dbo].[tProductImage]  WITH CHECK ADD  CONSTRAINT [FK_tProductImage_tProduct] FOREIGN KEY([fProductID])
 REFERENCES [dbo].[tProduct] ([fProductID])
