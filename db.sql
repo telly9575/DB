@@ -475,7 +475,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tShoppingCart](
-	[fBasketId] [int] NOT NULL,
+	[fBasketId] [int] IDENTITY(1,1) NOT NULL,
 	[fId] [int] NOT NULL,
 	[fProductID] [int] NOT NULL,
 	[fQuantity] [smallint] NOT NULL,
