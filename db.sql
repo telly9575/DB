@@ -94,6 +94,29 @@ CREATE TABLE [dbo].[tCategory](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
+/****** Object:  優惠代碼主表 ******/
+/****** Object:  Table [dbo].[tDiscount]    Script Date: 2020/2/4 上午 08:56:13 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[tDiscount](
+	[fDiscountCode] [nvarchar](50) NOT NULL,
+	[fDiscountName] [nvarchar](50) NOT NULL,
+	[fDiscountCategory] [varchar](5) NOT NULL,
+	[fDiscountMoneyRule] [bit] NOT NULL,
+	[fMoneyLimit] [int] NOT NULL,
+	[fDiscountContent] [decimal](10, 2) NOT NULL,
+	[fStartdate] [datetime] NOT NULL,
+	[fEndDate] [datetime] NOT NULL,
+	[fEnable] [bit] NOT NULL,
+ CONSTRAINT [PK_tDiscount] PRIMARY KEY CLUSTERED 
+(
+	[fDiscountCode] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
 /****** Object:  商品精油功效表 (供商品檢索&分類用) ******/
 /****** Object:  Table [dbo].[tEfficacy]    Script Date: 2020/1/30 下午 04:20:43 ******/
 SET ANSI_NULLS ON
@@ -494,6 +517,25 @@ CREATE TABLE [dbo].[tUserAuth](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
+/****** Object:  會員擁有優惠清單 ******/
+/****** Object:  Table [dbo].[tUserDiscountList]    Script Date: 2020/2/4 上午 08:56:13 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[tUserDiscountList](
+	[fUserId] [nvarchar](20) NOT NULL,
+	[fDiscountCode] [nvarchar](50) NOT NULL,
+	[fCount] [int] NOT NULL,
+ CONSTRAINT [PK_tUserDiscountList] PRIMARY KEY CLUSTERED 
+(
+	[fUserId] ASC,
+	[fDiscountCode] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
 /****** Object:  會員收藏文章清單 ******/
 /****** Object:  Table [dbo].[tUserFavorite]    Script Date: 2020/1/30 下午 04:20:44 ******/
 SET ANSI_NULLS ON
@@ -675,6 +717,16 @@ ALTER TABLE [dbo].[tUserAuth]  WITH CHECK ADD  CONSTRAINT [FK_tUserAuth_tUser] F
 REFERENCES [dbo].[tUser] ([fUserId])
 GO
 ALTER TABLE [dbo].[tUserAuth] CHECK CONSTRAINT [FK_tUserAuth_tUser]
+GO
+ALTER TABLE [dbo].[tUserDiscountList]  WITH CHECK ADD  CONSTRAINT [FK_tUserDiscountList_tDiscount] FOREIGN KEY([fDiscountCode])
+REFERENCES [dbo].[tDiscount] ([fDiscountCode])
+GO
+ALTER TABLE [dbo].[tUserDiscountList] CHECK CONSTRAINT [FK_tUserDiscountList_tDiscount]
+GO
+ALTER TABLE [dbo].[tUserDiscountList]  WITH CHECK ADD  CONSTRAINT [FK_tUserDiscountList_tUserProfile] FOREIGN KEY([fUserId])
+REFERENCES [dbo].[tUserProfile] ([fUserId])
+GO
+ALTER TABLE [dbo].[tUserDiscountList] CHECK CONSTRAINT [FK_tUserDiscountList_tUserProfile]
 GO
 ALTER TABLE [dbo].[tUserFavorite]  WITH CHECK ADD  CONSTRAINT [FK_tUserFavorite_tUser] FOREIGN KEY([fUserId])
 REFERENCES [dbo].[tUser] ([fUserId])
