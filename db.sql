@@ -86,7 +86,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tCategory](
-	[fCategoryID] [int] IDENTITY(1,1) NOT NULL,
+	[fCategoryID] [int] NOT NULL,
 	[fCategoryName] [nvarchar](50) NULL,
  CONSTRAINT [PK_tCategory] PRIMARY KEY CLUSTERED 
 (
@@ -124,11 +124,26 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tEfficacy](
-	[fEfficacyID] [int] IDENTITY(1,1) NOT NULL,
+	[fEfficacyID] [int] NOT NULL,
 	[fEfficacyName] [nvarchar](50) NULL,
  CONSTRAINT [PK_tEffcacy] PRIMARY KEY CLUSTERED 
 (
 	[fEfficacyID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  商品純露特性表 2020/2/4新增 ******/
+/****** Object:  Table [dbo].[tfeature]    Script Date: 2020/2/4 上午 12:13:17 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[tfeature](
+	[ffeatureID] [int] NOT NULL,
+	[ffeatureName] [nvarchar](50) NULL,
+ CONSTRAINT [PK_tfeature] PRIMARY KEY CLUSTERED 
+(
+	[ffeatureID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -243,7 +258,7 @@ CREATE TABLE [dbo].[tForumReplyAnalysis](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  商品精油香調表 (供商品檢索&分類用) ******/
+/****** Object:  商品精油香調表 (供單方精油檢索&分類用) ******/
 /****** Object:  Table [dbo].[tNote]    Script Date: 2020/1/30 下午 04:20:43 ******/
 SET ANSI_NULLS ON
 GO
@@ -319,7 +334,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tPart](
-	[fPartID] [int] IDENTITY(1,1) NOT NULL,
+	[fPartID] [int] NOT NULL,
 	[fPartName] [nvarchar](50) NULL,
  CONSTRAINT [PK_tPart] PRIMARY KEY CLUSTERED 
 (
@@ -343,33 +358,7 @@ CREATE TABLE [dbo].[tProdEfficacyRelation](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  商品主表 ******/
-/****** Object:  Table [dbo].[tProduct]    Script Date: 2020/1/30 下午 04:20:43 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[tProduct](
-	[fProductID] [int] IDENTITY(1,1) NOT NULL,
-	[fProductChName] [nvarchar](50) NOT NULL,
-	[fProductDesc] [nvarchar](max) NULL,
-	[fUnitPrice] [int] NULL,
-	[fQuantityPerUnit] [nvarchar](50) NULL,
-	[fUnitsInStock] [int] NULL,
-	[fUnitsOnOrder] [int] NULL,
-	[fReorderLevel] [int] NULL,
-	[fDiscontinued] [bit] NULL,
-	[fPartID] [int] NOT NULL,
-	[fNoteID] [int] NOT NULL,
-	[fCategoryID] [int] NOT NULL,
- CONSTRAINT [PK_tProduct] PRIMARY KEY CLUSTERED 
-(
-	[fProductID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
 /****** Object:  商品圖片表(尚未新增資料) ******/
-/****** Object:  Table [dbo].[tProductImage]    Script Date: 2020/1/30 下午 04:20:43 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -384,6 +373,61 @@ CREATE TABLE [dbo].[tProductImage](
 	[fProductImageId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  商品主表 ******/
+/****** Object:  Table [dbo].[tProduct]    Script Date: 2020/2/4 上午 12:13:17 ******/
+/****** Object:  刪除[fUnitsOnOrder][fReorderLevel][fPart][fNote] ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[tProduct](
+	[fProductID] [int] NOT NULL,
+	[fProductChName] [nvarchar](50) NOT NULL,
+	[fProductDesc] [nvarchar](max) NULL,
+	[fUnitPrice] [int] NULL,
+	[fQuantityPerUnit] [nvarchar](50) NULL,
+	[fUnitsInStock] [int] NULL,
+	[fDiscontinued] [bit] NULL,
+	[fCategoryID] [int] NOT NULL,
+ CONSTRAINT [PK_tProduct] PRIMARY KEY CLUSTERED 
+(
+	[fProductID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  商品副表_單方精油 2020/2/4新增 ******/
+/****** Object:  Table [dbo].[tProductUnilateral]    Script Date: 2020/2/4 上午 12:13:17 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[tProductUnilateral](
+	[fProductID] [int] NOT NULL,
+	[fPartID] [int] NULL,
+	[fNoteID] [int] NULL,
+	[fOrigin] [nvarchar](20) NULL,
+	[fextraction] [nvarchar](20) NULL,
+ CONSTRAINT [PK_tProduct_Unilateral] PRIMARY KEY CLUSTERED 
+(
+	[fProductID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  商品副表_植物油&純露 2020/2/4新增 ******/
+/****** Object:  Table [dbo].[tProductVegetableoil]    Script Date: 2020/2/4 上午 12:13:17 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[tProductVegetableoil](
+	[fProductID] [int] NOT NULL,
+	[ffeatureID] [int] NULL,
+ CONSTRAINT [PK_tProductVegetableoil] PRIMARY KEY CLUSTERED 
+(
+	[fProductID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
 GO
 /****** Object:  Table [dbo].[tQuestion]    Script Date: 2020/1/30 下午 04:20:43 ******/
 SET ANSI_NULLS ON
@@ -656,17 +700,24 @@ GO
 ALTER TABLE [dbo].[tProduct]  WITH CHECK ADD  CONSTRAINT [FK_tProduct_tCategory] FOREIGN KEY([fCategoryID])
 REFERENCES [dbo].[tCategory] ([fCategoryID])
 GO
-ALTER TABLE [dbo].[tProduct] CHECK CONSTRAINT [FK_tProduct_tCategory]
-GO
-ALTER TABLE [dbo].[tProduct]  WITH CHECK ADD  CONSTRAINT [FK_tProduct_tNote] FOREIGN KEY([fNoteID])
+
+ALTER TABLE [dbo].[tProductUnilateral]  WITH CHECK ADD  CONSTRAINT [FK_tProductUnilateral_tNote] FOREIGN KEY([fNoteID])
 REFERENCES [dbo].[tNote] ([fNoteID])
 GO
-ALTER TABLE [dbo].[tProduct] CHECK CONSTRAINT [FK_tProduct_tNote]
+ALTER TABLE [dbo].[tProductUnilateral] CHECK CONSTRAINT [FK_tProductUnilateral_tNote]
 GO
-ALTER TABLE [dbo].[tProduct]  WITH CHECK ADD  CONSTRAINT [FK_tProduct_tPart] FOREIGN KEY([fPartID])
+ALTER TABLE [dbo].[tProductUnilateral]  WITH CHECK ADD  CONSTRAINT [FK_tProductUnilateral_tPart] FOREIGN KEY([fPartID])
 REFERENCES [dbo].[tPart] ([fPartID])
 GO
-ALTER TABLE [dbo].[tProduct] CHECK CONSTRAINT [FK_tProduct_tPart]
+ALTER TABLE [dbo].[tProductUnilateral] CHECK CONSTRAINT [FK_tProductUnilateral_tPart]
+GO
+ALTER TABLE [dbo].[tProductVegetableoil]  WITH CHECK ADD  CONSTRAINT [FK_tProductVegetableoil_tfeature] FOREIGN KEY([fProductID])
+REFERENCES [dbo].[tfeature] ([ffeatureID])
+GO
+ALTER TABLE [dbo].[tProductVegetableoil] CHECK CONSTRAINT [FK_tProductVegetableoil_tfeature]
+GO
+
+
 GO
 ALTER TABLE [dbo].[tProductImage]  WITH CHECK ADD  CONSTRAINT [FK_tProductImage_tProduct] FOREIGN KEY([fProductID])
 REFERENCES [dbo].[tProduct] ([fProductID])
