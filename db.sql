@@ -480,25 +480,9 @@ CREATE TABLE [dbo].[tShoppingCart](
 	[fProductID] [int] NOT NULL,
 	[fQuantity] [smallint] NOT NULL,
 	[fAddTime] [datetime] NOT NULL,
-	[fStatus] [int] NOT NULL,
  CONSTRAINT [PK_tShoppingCart] PRIMARY KEY CLUSTERED 
 (
 	[fBasketId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  購物車狀態表 ******/
-/****** Object:  Table [dbo].[tShoppingStatus]    Script Date: 2020/1/30 下午 04:20:43 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[tShoppingStatus](
-	[fStatus] [int] IDENTITY(1,1) NOT NULL,
-	[fStatusName] [nvarchar](20) NOT NULL,
- CONSTRAINT [PK_tShoppingStatus] PRIMARY KEY CLUSTERED 
-(
-	[fStatus] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -564,7 +548,23 @@ CREATE TABLE [dbo].[tUserAuth](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-
+/******會員瀏覽商品紀錄清單 ******/
+/****** Object:  Table [dbo].[tUserBrowseHistory]    Script Date: 2020/2/5 上午 12:38:29 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[tUserBrowseHistory](
+	[fBrowseHistoryId] [int] IDENTITY(1,1) NOT NULL,
+	[fId] [int] NOT NULL,
+	[fProductId] [int] NOT NULL,
+	[fBrowseTime] [datetime] NOT NULL,
+ CONSTRAINT [PK_tUserBrowseHistory] PRIMARY KEY CLUSTERED 
+(
+	[fBrowseHistoryId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
 /****** Object:  會員擁有優惠清單 ******/
 /****** Object:  Table [dbo].[tUserDiscountList]    Script Date: 2020/2/4 上午 08:56:13 ******/
 SET ANSI_NULLS ON
@@ -596,6 +596,23 @@ CREATE TABLE [dbo].[tUserFavorite](
  CONSTRAINT [PK_tUserFavorite] PRIMARY KEY CLUSTERED 
 (
 	[fId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  會員商品收藏清單 ******/
+/****** Object:  Table [dbo].[tUserProductFavorite]    Script Date: 2020/2/5 上午 12:38:29 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[tUserProductFavorite](
+	[fFavoriteId] [int] IDENTITY(1,1) NOT NULL,
+	[fId] [int] NOT NULL,
+	[fProductId] [int] NOT NULL,
+	[fAddTime] [datetime] NOT NULL,
+ CONSTRAINT [PK_tUserProductFavorite] PRIMARY KEY CLUSTERED 
+(
+	[fFavoriteId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -746,11 +763,6 @@ REFERENCES [dbo].[tProduct] ([fProductID])
 GO
 ALTER TABLE [dbo].[tShoppingCart] CHECK CONSTRAINT [FK_tShoppingCart_tProduct]
 GO
-ALTER TABLE [dbo].[tShoppingCart]  WITH CHECK ADD  CONSTRAINT [FK_tShoppingCart_tShoppingStatus] FOREIGN KEY([fStatus])
-REFERENCES [dbo].[tShoppingStatus] ([fStatus])
-GO
-ALTER TABLE [dbo].[tShoppingCart] CHECK CONSTRAINT [FK_tShoppingCart_tShoppingStatus]
-GO
 ALTER TABLE [dbo].[tShoppingCart]  WITH CHECK ADD  CONSTRAINT [FK_tShoppingCart_tUserProfile] FOREIGN KEY([fId])
 REFERENCES [dbo].[tUserProfile] ([fId])
 GO
@@ -781,6 +793,16 @@ REFERENCES [dbo].[tUser] ([fId])
 GO
 ALTER TABLE [dbo].[tUserAuth] CHECK CONSTRAINT [FK_tUserAuth_tUser]
 GO
+ALTER TABLE [dbo].[tUserBrowseHistory]  WITH CHECK ADD  CONSTRAINT [FK_tUserBrowseHistory_tProduct] FOREIGN KEY([fProductId])
+REFERENCES [dbo].[tProduct] ([fProductID])
+GO
+ALTER TABLE [dbo].[tUserBrowseHistory] CHECK CONSTRAINT [FK_tUserBrowseHistory_tProduct]
+GO
+ALTER TABLE [dbo].[tUserBrowseHistory]  WITH CHECK ADD  CONSTRAINT [FK_tUserBrowseHistory_tUserProfile] FOREIGN KEY([fId])
+REFERENCES [dbo].[tUserProfile] ([fId])
+GO
+ALTER TABLE [dbo].[tUserBrowseHistory] CHECK CONSTRAINT [FK_tUserBrowseHistory_tUserProfile]
+GO
 ALTER TABLE [dbo].[tUserDiscountList]  WITH CHECK ADD  CONSTRAINT [FK_tUserDiscountList_tDiscount] FOREIGN KEY([fDiscountCode])
 REFERENCES [dbo].[tDiscount] ([fDiscountCode])
 GO
@@ -800,6 +822,16 @@ ALTER TABLE [dbo].[tUserFavorite]  WITH CHECK ADD  CONSTRAINT [FK_tUserFavorite_
 REFERENCES [dbo].[tForum] ([fPostId])
 GO
 ALTER TABLE [dbo].[tUserFavorite] CHECK CONSTRAINT [FK_tUserFavorite_tUserFavorite]
+GO
+ALTER TABLE [dbo].[tUserProductFavorite]  WITH CHECK ADD  CONSTRAINT [FK_tUserProductFavorite_tProduct] FOREIGN KEY([fProductId])
+REFERENCES [dbo].[tProduct] ([fProductID])
+GO
+ALTER TABLE [dbo].[tUserProductFavorite] CHECK CONSTRAINT [FK_tUserProductFavorite_tProduct]
+GO
+ALTER TABLE [dbo].[tUserProductFavorite]  WITH CHECK ADD  CONSTRAINT [FK_tUserProductFavorite_tUserProductFavorite] FOREIGN KEY([fId])
+REFERENCES [dbo].[tUserProfile] ([fId])
+GO
+ALTER TABLE [dbo].[tUserProductFavorite] CHECK CONSTRAINT [FK_tUserProductFavorite_tUserProductFavorite]
 GO
 USE [master]
 GO
