@@ -1,6 +1,6 @@
 USE [master]
 GO
-/****** Object:  Database [dbShoppingForum]    Script Date: 2020/1/30 下午 04:20:43 ******/
+/****** Object:  Database [dbShoppingForum]    Script Date: 2020/2/4 下午 11:21:47 ******/
 CREATE DATABASE [dbShoppingForum]
  CONTAINMENT = NONE
  ON  PRIMARY 
@@ -156,14 +156,14 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tForum](
 	[fPostId] [int] IDENTITY(1,1) NOT NULL,
-	[fUserId] [nvarchar](20) NOT NULL,
+	[fId] [int] NOT NULL,
 	[fPostTitle] [nvarchar](50) NOT NULL,
 	[fPostContent] [nvarchar](max) NOT NULL,
 	[fIsPost] [bit] NOT NULL,
 	[fCreaTime] [datetime] NOT NULL,
 	[fUpdateTime] [datetime] NOT NULL,
 	[fEnableFlag] [bit] NOT NULL,
-	[fEnableUserId] [nvarchar](20) NULL,
+	[fEnableUserId] [int] NULL,
 	[fDisableTime] [datetime] NULL,
 	[fTopSeq] [int] NOT NULL,
 	[fTotalViewCount] [int] NOT NULL,
@@ -183,13 +183,13 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tForumAnalysis](
 	[fPostId] [int] NOT NULL,
-	[fUserId] [nvarchar](20) NOT NULL,
+	[fId] [int] NOT NULL,
 	[fLikeHate] [bit] NULL,
 	[fShareCount] [int] NOT NULL,
  CONSTRAINT [PK_tForumAnalysis] PRIMARY KEY CLUSTERED 
 (
 	[fPostId] ASC,
-	[fUserId] ASC
+	[fId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -201,7 +201,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tForumAuth](
-	[fUserId] [nvarchar](20) NOT NULL,
+	[fId] [int] NOT NULL,
 	[fAuthBlackList] [nvarchar](50) NULL,
 	[fAuthPostFlag] [nvarchar](50) NULL,
 	[fAuthReplyFlag] [nvarchar](50) NULL,
@@ -211,7 +211,7 @@ CREATE TABLE [dbo].[tForumAuth](
 	[fAuthDeleteReplyFlag] [nvarchar](50) NULL,
  CONSTRAINT [PK_tForumAuth] PRIMARY KEY CLUSTERED 
 (
-	[fUserId] ASC
+	[fId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -227,10 +227,10 @@ CREATE TABLE [dbo].[tForumReply](
 	[fReplyId] [nvarchar](50) NOT NULL,
 	[fReplyTargetId] [nvarchar](50) NOT NULL,
 	[fReplySeqNo] [int] NOT NULL,
-	[fUserId] [nvarchar](20) NOT NULL,
+	[fId] [int] NOT NULL,
 	[fReplyTime] [datetime] NOT NULL,
 	[fEnableFlag] [bit] NOT NULL,
-	[fDeleteUserId] [nvarchar](20) NULL,
+	[fDeleteUserId] [int] NULL,
 	[fContent] [nvarchar](max) NOT NULL,
  CONSTRAINT [PK_tForumReply] PRIMARY KEY CLUSTERED 
 (
@@ -249,7 +249,7 @@ GO
 CREATE TABLE [dbo].[tForumReplyAnalysis](
 	[fPostId] [int] NOT NULL,
 	[fReplyId] [nvarchar](50) NOT NULL,
-	[fUserId] [nvarchar](20) NOT NULL,
+	[fId] [int] NOT NULL,
 	[fLikeHate] [bit] NOT NULL,
  CONSTRAINT [PK_tForumReplyAnalysis] PRIMARY KEY CLUSTERED 
 (
@@ -288,8 +288,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tOrder](
 	[fOrderId] [bigint] NOT NULL,
-	[fUserId] [nvarchar](20) NOT NULL,
-	[fOrderDate][datetime] NOT NULL,
+	[fId] [int] NOT NULL,
+	[fOrderDate] [datetime] NOT NULL,
 	[fShippedDate] [datetime] NULL,
 	[fRequiredDate] [datetime] NULL,
 	[fScore] [int] NULL,
@@ -305,7 +305,7 @@ CREATE TABLE [dbo].[tOrder](
 (
 	[fOrderId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
 /****** Object:  訂單明細表 ******/
@@ -456,7 +456,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tScore](
-	[fUserId] [nvarchar](20) NOT NULL,
+	[fId] [int] NOT NULL,
 	[fScore] [int] NULL,
 	[fActiveScore] [int] NULL,
 	[fQuestionScore] [int] NULL,
@@ -464,7 +464,7 @@ CREATE TABLE [dbo].[tScore](
 	[fAuthTestFlag] [bit] NULL,
  CONSTRAINT [PK_tScore] PRIMARY KEY CLUSTERED 
 (
-	[fUserId] ASC
+	[fId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -476,7 +476,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tShoppingCart](
 	[fBasketId] [int] NOT NULL,
-	[fUserId] [nvarchar](20) NOT NULL,
+	[fId] [int] NOT NULL,
 	[fProductID] [int] NOT NULL,
 	[fQuantity] [smallint] NOT NULL,
 	[fAddTime] [datetime] NOT NULL,
@@ -509,7 +509,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tTest](
 	[fTestId] [int] IDENTITY(1,1) NOT NULL,
-	[fUserId] [nvarchar](20) NOT NULL,
+	[fId] [int] NOT NULL,
 	[fQuestionId] [int] NOT NULL,
 	[fTestStar] [datetime] NULL,
 	[fTestEnd] [datetime] NULL,
@@ -525,39 +525,42 @@ CREATE TABLE [dbo].[tTest](
 ) ON [PRIMARY]
 GO
 /****** Object:  會員收登錄資訊表 ******/
+/****** 將fUserId欄位改為fId ******/
+/****** fLoginTime與fLogoutTime欄位資料型態改為datetime ******/
 /****** Object:  Table [dbo].[tUser]    Script Date: 2020/1/30 下午 04:20:43 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tUser](
-	[fUserId] [nvarchar](20) NOT NULL,
+	[fId] [int] NOT NULL,
 	[fPassword] [nvarchar](50) NOT NULL,
 	[fPasswordSalt] [nvarchar](max) NOT NULL,
 	[fChkNum] [nvarchar](50) NOT NULL,
 	[fResetPwCode] [nvarchar](50) NOT NULL,
-	[fLoginTime] [datetimeoffset](7) NOT NULL,
-	[fLogoutTime] [datetimeoffset](7) NOT NULL,
+	[fLoginTime] [datetime] NOT NULL,
+	[fLogoutTime] [datetime] NOT NULL,
  CONSTRAINT [PK_tUser] PRIMARY KEY CLUSTERED 
 (
-	[fUserId] ASC
+	[fId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 /****** Object:  會員權限定義表 ******/
+/****** 將fUserId欄位改為fId ******/
 /****** Object:  Table [dbo].[tUserAuth]    Script Date: 2020/1/30 下午 04:20:43 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tUserAuth](
-	[fUserId] [nvarchar](20) NOT NULL,
+	[fId] [int] NOT NULL,
 	[fAuth] [nvarchar](50) NOT NULL,
 	[fAuthPost] [bit] NOT NULL,
 	[fAuthReply] [bit] NOT NULL,
  CONSTRAINT [PK_tUserAuth] PRIMARY KEY CLUSTERED 
 (
-	[fUserId] ASC
+	[fId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -569,66 +572,75 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tUserDiscountList](
-	[fUserId] [nvarchar](20) NOT NULL,
+	[fId] [int] NOT NULL,
 	[fDiscountCode] [nvarchar](50) NOT NULL,
 	[fCount] [int] NOT NULL,
  CONSTRAINT [PK_tUserDiscountList] PRIMARY KEY CLUSTERED 
 (
-	[fUserId] ASC,
+	[fId] ASC,
 	[fDiscountCode] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
 
 /****** Object:  會員收藏文章清單 ******/
+/****** 將fUserId欄位改為fId ******/
 /****** Object:  Table [dbo].[tUserFavorite]    Script Date: 2020/1/30 下午 04:20:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tUserFavorite](
-	[fUserId] [nvarchar](20) NOT NULL,
+	[fId] [int] NOT NULL,
 	[fPostId] [int] NOT NULL,
  CONSTRAINT [PK_tUserFavorite] PRIMARY KEY CLUSTERED 
 (
-	[fUserId] ASC
+	[fId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
 /****** Object:  會員主表--個人資料 ******/
+/****** 加入fId欄位，並將fId設為PK ******/
+/****** 刪除fEmail欄位 ******/
+/****** fGender欄位不允許null ******/
+/****** fBirthday欄位資料型態改為datetime ******/
+/****** fCreateDate欄位資料型態改為datetime ******/
+/****** fAddress欄位資料型態改為nvarchar(MAX) ******/
+/****** fUserId內容改為填寫Email資料，fUserId欄位資料型態改為nvarchar(50) ******/
 /****** Object:  Table [dbo].[tUserProfile]    Script Date: 2020/1/30 下午 04:20:44 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tUserProfile](
-	[fUserId] [nvarchar](20) NOT NULL,
+	[fId] [int] IDENTITY(1,1) NOT NULL,
+		[fUserId] [nvarchar](20) NOT NULL,
 	[fName] [nvarchar](50) NOT NULL,
-	[fGender] [nvarchar](50) NULL,
-	[fBirthday] [datetimeoffset](7) NOT NULL,
+	[fGender] [nvarchar](20) NOT NULL,
+	[fBirthday] [datetime] NOT NULL,
 	[fTel] [nvarchar](50) NULL,
 	[fPhone] [nvarchar](50) NOT NULL,
 	[fEmail] [nvarchar](50) NOT NULL,
 	[fCity] [nvarchar](50) NOT NULL,
-	[fAddress] [nvarchar](50) NOT NULL,
+	[fAddress] [nvarchar](max) NOT NULL,
 	[fPhoto] [nvarchar](max) NULL,
 	[fCreateDate] [datetime] NULL,
 	[fScore] [int] NULL,
  CONSTRAINT [PK_tUserProfile] PRIMARY KEY CLUSTERED 
 (
-	[fUserId] ASC
+	[fId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
 /****** table關聯設定 ******/
-ALTER TABLE [dbo].[tForum]  WITH CHECK ADD  CONSTRAINT [FK_tForum_tUserProfile] FOREIGN KEY([fUserId])
-REFERENCES [dbo].[tUserProfile] ([fUserId])
+ALTER TABLE [dbo].[tForum]  WITH CHECK ADD  CONSTRAINT [FK_tForum_tUserProfile] FOREIGN KEY([fId])
+REFERENCES [dbo].[tUserProfile] ([fId])
 GO
 ALTER TABLE [dbo].[tForum] CHECK CONSTRAINT [FK_tForum_tUserProfile]
 GO
 ALTER TABLE [dbo].[tForum]  WITH CHECK ADD  CONSTRAINT [FK_tForum_tUserProfile1] FOREIGN KEY([fEnableUserId])
-REFERENCES [dbo].[tUserProfile] ([fUserId])
+REFERENCES [dbo].[tUserProfile] ([fId])
 GO
 ALTER TABLE [dbo].[tForum] CHECK CONSTRAINT [FK_tForum_tUserProfile1]
 GO
@@ -637,13 +649,13 @@ REFERENCES [dbo].[tForum] ([fPostId])
 GO
 ALTER TABLE [dbo].[tForumAnalysis] CHECK CONSTRAINT [FK_tForumAnalysis_tForum]
 GO
-ALTER TABLE [dbo].[tForumAnalysis]  WITH CHECK ADD  CONSTRAINT [FK_tForumAnalysis_tUserProfile] FOREIGN KEY([fUserId])
-REFERENCES [dbo].[tUserProfile] ([fUserId])
+ALTER TABLE [dbo].[tForumAnalysis]  WITH CHECK ADD  CONSTRAINT [FK_tForumAnalysis_tUserProfile] FOREIGN KEY([fId])
+REFERENCES [dbo].[tUserProfile] ([fId])
 GO
 ALTER TABLE [dbo].[tForumAnalysis] CHECK CONSTRAINT [FK_tForumAnalysis_tUserProfile]
 GO
-ALTER TABLE [dbo].[tForumAuth]  WITH CHECK ADD  CONSTRAINT [FK_tForumAuth_tUserProfile] FOREIGN KEY([fUserId])
-REFERENCES [dbo].[tUserProfile] ([fUserId])
+ALTER TABLE [dbo].[tForumAuth]  WITH CHECK ADD  CONSTRAINT [FK_tForumAuth_tUserProfile] FOREIGN KEY([fId])
+REFERENCES [dbo].[tUserProfile] ([fId])
 GO
 ALTER TABLE [dbo].[tForumAuth] CHECK CONSTRAINT [FK_tForumAuth_tUserProfile]
 GO
@@ -652,13 +664,13 @@ REFERENCES [dbo].[tForum] ([fPostId])
 GO
 ALTER TABLE [dbo].[tForumReply] CHECK CONSTRAINT [FK_tForumReply_tForum]
 GO
-ALTER TABLE [dbo].[tForumReply]  WITH CHECK ADD  CONSTRAINT [FK_tForumReply_tUserProfile] FOREIGN KEY([fUserId])
-REFERENCES [dbo].[tUserProfile] ([fUserId])
+ALTER TABLE [dbo].[tForumReply]  WITH CHECK ADD  CONSTRAINT [FK_tForumReply_tUserProfile] FOREIGN KEY([fId])
+REFERENCES [dbo].[tUserProfile] ([fId])
 GO
 ALTER TABLE [dbo].[tForumReply] CHECK CONSTRAINT [FK_tForumReply_tUserProfile]
 GO
 ALTER TABLE [dbo].[tForumReply]  WITH CHECK ADD  CONSTRAINT [FK_tForumReply_tUserProfile1] FOREIGN KEY([fDeleteUserId])
-REFERENCES [dbo].[tUserProfile] ([fUserId])
+REFERENCES [dbo].[tUserProfile] ([fId])
 GO
 ALTER TABLE [dbo].[tForumReply] CHECK CONSTRAINT [FK_tForumReply_tUserProfile1]
 GO
@@ -667,13 +679,13 @@ REFERENCES [dbo].[tForumReply] ([fPostId], [fReplyId])
 GO
 ALTER TABLE [dbo].[tForumReplyAnalysis] CHECK CONSTRAINT [FK_tForumReplyAnalysis_tForumReply]
 GO
-ALTER TABLE [dbo].[tForumReplyAnalysis]  WITH CHECK ADD  CONSTRAINT [FK_tForumReplyAnalysis_tUserProfile] FOREIGN KEY([fUserId])
-REFERENCES [dbo].[tUserProfile] ([fUserId])
+ALTER TABLE [dbo].[tForumReplyAnalysis]  WITH CHECK ADD  CONSTRAINT [FK_tForumReplyAnalysis_tUserProfile] FOREIGN KEY([fId])
+REFERENCES [dbo].[tUserProfile] ([fId])
 GO
 ALTER TABLE [dbo].[tForumReplyAnalysis] CHECK CONSTRAINT [FK_tForumReplyAnalysis_tUserProfile]
 GO
-ALTER TABLE [dbo].[tOrder]  WITH CHECK ADD  CONSTRAINT [FK_tOrder_tUser] FOREIGN KEY([fUserId])
-REFERENCES [dbo].[tUserProfile] ([fUserId])
+ALTER TABLE [dbo].[tOrder]  WITH CHECK ADD  CONSTRAINT [FK_tOrder_tUser] FOREIGN KEY([fId])
+REFERENCES [dbo].[tUserProfile] ([fId])
 GO
 ALTER TABLE [dbo].[tOrder] CHECK CONSTRAINT [FK_tOrder_tUser]
 GO
@@ -724,8 +736,8 @@ REFERENCES [dbo].[tProduct] ([fProductID])
 GO
 ALTER TABLE [dbo].[tProductImage] CHECK CONSTRAINT [FK_tProductImage_tProduct]
 GO
-ALTER TABLE [dbo].[tScore]  WITH CHECK ADD  CONSTRAINT [FK_tScore_tUserProfile] FOREIGN KEY([fUserId])
-REFERENCES [dbo].[tUserProfile] ([fUserId])
+ALTER TABLE [dbo].[tScore]  WITH CHECK ADD  CONSTRAINT [FK_tScore_tUserProfile] FOREIGN KEY([fId])
+REFERENCES [dbo].[tUserProfile] ([fId])
 GO
 ALTER TABLE [dbo].[tScore] CHECK CONSTRAINT [FK_tScore_tUserProfile]
 GO
@@ -739,8 +751,8 @@ REFERENCES [dbo].[tShoppingStatus] ([fStatus])
 GO
 ALTER TABLE [dbo].[tShoppingCart] CHECK CONSTRAINT [FK_tShoppingCart_tShoppingStatus]
 GO
-ALTER TABLE [dbo].[tShoppingCart]  WITH CHECK ADD  CONSTRAINT [FK_tShoppingCart_tUserProfile] FOREIGN KEY([fUserId])
-REFERENCES [dbo].[tUserProfile] ([fUserId])
+ALTER TABLE [dbo].[tShoppingCart]  WITH CHECK ADD  CONSTRAINT [FK_tShoppingCart_tUserProfile] FOREIGN KEY([fId])
+REFERENCES [dbo].[tUserProfile] ([fId])
 GO
 ALTER TABLE [dbo].[tShoppingCart] CHECK CONSTRAINT [FK_tShoppingCart_tUserProfile]
 GO
@@ -749,23 +761,23 @@ REFERENCES [dbo].[tQuestion] ([fQuestionId])
 GO
 ALTER TABLE [dbo].[tTest] CHECK CONSTRAINT [FK_tTest_fQuestionId]
 GO
-ALTER TABLE [dbo].[tTest]  WITH CHECK ADD  CONSTRAINT [FK_tTest_fUserId] FOREIGN KEY([fUserId])
-REFERENCES [dbo].[tScore] ([fUserId])
+ALTER TABLE [dbo].[tTest]  WITH CHECK ADD  CONSTRAINT [FK_tTest_fUserId] FOREIGN KEY([fId])
+REFERENCES [dbo].[tScore] ([fId])
 GO
 ALTER TABLE [dbo].[tTest] CHECK CONSTRAINT [FK_tTest_fUserId]
 GO
-ALTER TABLE [dbo].[tTest]  WITH CHECK ADD  CONSTRAINT [FK_tTest_tUserProfile] FOREIGN KEY([fUserId])
-REFERENCES [dbo].[tUserProfile] ([fUserId])
+ALTER TABLE [dbo].[tTest]  WITH CHECK ADD  CONSTRAINT [FK_tTest_tUserProfile] FOREIGN KEY([fId])
+REFERENCES [dbo].[tUserProfile] ([fId])
 GO
 ALTER TABLE [dbo].[tTest] CHECK CONSTRAINT [FK_tTest_tUserProfile]
 GO
-ALTER TABLE [dbo].[tUser]  WITH CHECK ADD  CONSTRAINT [FK_tUser_tUserProfile] FOREIGN KEY([fUserId])
-REFERENCES [dbo].[tUserProfile] ([fUserId])
+ALTER TABLE [dbo].[tUser]  WITH CHECK ADD  CONSTRAINT [FK_tUser_tUserProfile] FOREIGN KEY([fId])
+REFERENCES [dbo].[tUserProfile] ([fId])
 GO
 ALTER TABLE [dbo].[tUser] CHECK CONSTRAINT [FK_tUser_tUserProfile]
 GO
-ALTER TABLE [dbo].[tUserAuth]  WITH CHECK ADD  CONSTRAINT [FK_tUserAuth_tUser] FOREIGN KEY([fUserId])
-REFERENCES [dbo].[tUser] ([fUserId])
+ALTER TABLE [dbo].[tUserAuth]  WITH CHECK ADD  CONSTRAINT [FK_tUserAuth_tUser] FOREIGN KEY([fId])
+REFERENCES [dbo].[tUser] ([fId])
 GO
 ALTER TABLE [dbo].[tUserAuth] CHECK CONSTRAINT [FK_tUserAuth_tUser]
 GO
@@ -774,13 +786,13 @@ REFERENCES [dbo].[tDiscount] ([fDiscountCode])
 GO
 ALTER TABLE [dbo].[tUserDiscountList] CHECK CONSTRAINT [FK_tUserDiscountList_tDiscount]
 GO
-ALTER TABLE [dbo].[tUserDiscountList]  WITH CHECK ADD  CONSTRAINT [FK_tUserDiscountList_tUserProfile] FOREIGN KEY([fUserId])
-REFERENCES [dbo].[tUserProfile] ([fUserId])
+ALTER TABLE [dbo].[tUserDiscountList]  WITH CHECK ADD  CONSTRAINT [FK_tUserDiscountList_tUserProfile] FOREIGN KEY([fId])
+REFERENCES [dbo].[tUserProfile] ([fId])
 GO
 ALTER TABLE [dbo].[tUserDiscountList] CHECK CONSTRAINT [FK_tUserDiscountList_tUserProfile]
 GO
-ALTER TABLE [dbo].[tUserFavorite]  WITH CHECK ADD  CONSTRAINT [FK_tUserFavorite_tUser] FOREIGN KEY([fUserId])
-REFERENCES [dbo].[tUser] ([fUserId])
+ALTER TABLE [dbo].[tUserFavorite]  WITH CHECK ADD  CONSTRAINT [FK_tUserFavorite_tUser] FOREIGN KEY([fId])
+REFERENCES [dbo].[tUser] ([fId])
 GO
 ALTER TABLE [dbo].[tUserFavorite] CHECK CONSTRAINT [FK_tUserFavorite_tUser]
 GO
