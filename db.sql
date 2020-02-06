@@ -265,7 +265,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tNote](
-	[fNoteID] [int] IDENTITY(1,1) NOT NULL,
+	[fNoteID] [int] NOT NULL,
 	[fNoteName] [nvarchar](50) NULL,
  CONSTRAINT [PK_tNote] PRIMARY KEY CLUSTERED 
 (
@@ -729,7 +729,13 @@ GO
 ALTER TABLE [dbo].[tProduct]  WITH CHECK ADD  CONSTRAINT [FK_tProduct_tCategory] FOREIGN KEY([fCategoryID])
 REFERENCES [dbo].[tCategory] ([fCategoryID])
 GO
-
+ALTER TABLE [dbo].[tProduct] CHECK CONSTRAINT [FK_tProduct_tCategory]
+GO
+ALTER TABLE [dbo].[tProductImage]  WITH CHECK ADD  CONSTRAINT [FK_tProductImage_tProduct] FOREIGN KEY([fProductID])
+REFERENCES [dbo].[tProduct] ([fProductID])
+GO
+ALTER TABLE [dbo].[tProductImage] CHECK CONSTRAINT [FK_tProductImage_tProduct]
+GO
 ALTER TABLE [dbo].[tProductUnilateral]  WITH CHECK ADD  CONSTRAINT [FK_tProductUnilateral_tNote] FOREIGN KEY([fNoteID])
 REFERENCES [dbo].[tNote] ([fNoteID])
 GO
@@ -740,18 +746,20 @@ REFERENCES [dbo].[tPart] ([fPartID])
 GO
 ALTER TABLE [dbo].[tProductUnilateral] CHECK CONSTRAINT [FK_tProductUnilateral_tPart]
 GO
-ALTER TABLE [dbo].[tProductVegetableoil]  WITH CHECK ADD  CONSTRAINT [FK_tProductVegetableoil_tfeature] FOREIGN KEY([fProductID])
+ALTER TABLE [dbo].[tProductUnilateral]  WITH CHECK ADD  CONSTRAINT [FK_tProductUnilateral_tProduct] FOREIGN KEY([fProductID])
+REFERENCES [dbo].[tProduct] ([fProductID])
+GO
+ALTER TABLE [dbo].[tProductUnilateral] CHECK CONSTRAINT [FK_tProductUnilateral_tProduct]
+GO
+ALTER TABLE [dbo].[tProductVegetableoil]  WITH CHECK ADD  CONSTRAINT [FK_tProductVegetableoil_tfeature] FOREIGN KEY([ffeatureID])
 REFERENCES [dbo].[tfeature] ([ffeatureID])
 GO
 ALTER TABLE [dbo].[tProductVegetableoil] CHECK CONSTRAINT [FK_tProductVegetableoil_tfeature]
 GO
-
-
-GO
-ALTER TABLE [dbo].[tProductImage]  WITH CHECK ADD  CONSTRAINT [FK_tProductImage_tProduct] FOREIGN KEY([fProductID])
+ALTER TABLE [dbo].[tProductVegetableoil]  WITH CHECK ADD  CONSTRAINT [FK_tProductVegetableoil_tProduct] FOREIGN KEY([fProductID])
 REFERENCES [dbo].[tProduct] ([fProductID])
 GO
-ALTER TABLE [dbo].[tProductImage] CHECK CONSTRAINT [FK_tProductImage_tProduct]
+ALTER TABLE [dbo].[tProductVegetableoil] CHECK CONSTRAINT [FK_tProductVegetableoil_tProduct]
 GO
 ALTER TABLE [dbo].[tScore]  WITH CHECK ADD  CONSTRAINT [FK_tScore_tUserProfile] FOREIGN KEY([fId])
 REFERENCES [dbo].[tUserProfile] ([fId])
