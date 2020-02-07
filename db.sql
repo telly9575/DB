@@ -160,7 +160,7 @@ CREATE TABLE [dbo].[tForum](
 	[fPostTitle] [nvarchar](50) NOT NULL,
 	[fPostContent] [nvarchar](max) NOT NULL,
 	[fIsPost] [bit] NOT NULL,
-	[fCreaTime] [datetime] NOT NULL,
+	[fCreateTime] [datetime] NOT NULL,
 	[fUpdateTime] [datetime] NOT NULL,
 	[fEnableFlag] [bit] NOT NULL,
 	[fEnableUserId] [int] NULL,
@@ -287,7 +287,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tOrder](
-	[fOrderId] [bigint] NOT NULL,
+	[fOrderId] [bigint] IDENTITY(1000,1) NOT NULL,
 	[fId] [int] NOT NULL,
 	[fOrderDate] [datetime] NOT NULL,
 	[fShippedDate] [datetime] NULL,
@@ -297,10 +297,10 @@ CREATE TABLE [dbo].[tOrder](
 	[fConsigneeTelephone] [nvarchar](50) NULL,
 	[fConsigneeCellPhone] [nvarchar](50) NULL,
 	[fConsigneeAddress] [nvarchar](50) NULL,
-	[fConsigneeAreUser] [bit] NULL,
 	[fOrderCompanyTitle] [nvarchar](50) NULL,
 	[fOrderTaxIdDNumber] [int] NULL,
 	[fOrderPostScript] [nvarchar](max) NULL,
+	[fPayment] [nvarchar](50) NULL,
  CONSTRAINT [PK_tOrder] PRIMARY KEY CLUSTERED 
 (
 	[fOrderId] ASC
@@ -316,14 +316,13 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tOrderDetail](
-	[fOrderDetailId] [int] IDENTITY(1,1) NOT NULL,
 	[fOrderId] [bigint] NOT NULL,
 	[fProductId] [int] NOT NULL,
 	[fOrderQuantity] [int] NULL,
-	[fPayment] [nvarchar](50) NULL,
  CONSTRAINT [PK_tOrderDetail] PRIMARY KEY CLUSTERED 
 (
-	[fOrderDetailId] ASC
+	[fOrderId] ASC,
+	[fProductId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -508,45 +507,37 @@ CREATE TABLE [dbo].[tTest](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  會員收登錄資訊表 ******/
-/****** 將fUserId欄位改為fId ******/
-/****** fLoginTime與fLogoutTime欄位資料型態改為datetime ******/
-/****** Object:  Table [dbo].[tUser]    Script Date: 2020/1/30 下午 04:20:43 ******/
+/****** Object: 會員登入資訊表 ******/
+/****** Object:  Table [dbo].[tUserLog]     Script Date: 2020/2/6 下午 11:07:59 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[tUser](
+CREATE TABLE [dbo].[tUserLog](
 	[fId] [int] NOT NULL,
-	[fPassword] [nvarchar](50) NOT NULL,
-	[fPasswordSalt] [nvarchar](max) NOT NULL,
-	[fChkNum] [nvarchar](50) NOT NULL,
-	[fResetPwCode] [nvarchar](50) NOT NULL,
-	[fLoginTime] [datetime] NOT NULL,
-	[fLogoutTime] [datetime] NOT NULL,
- CONSTRAINT [PK_tUser] PRIMARY KEY CLUSTERED 
-(
-	[fId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
-/****** Object:  會員權限定義表 ******/
-/****** 將fUserId欄位改為fId ******/
-/****** Object:  Table [dbo].[tUserAuth]    Script Date: 2020/1/30 下午 04:20:43 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[tUserAuth](
-	[fId] [int] NOT NULL,
-	[fAuth] [nvarchar](50) NOT NULL,
-	[fAuthPost] [bit] NOT NULL,
-	[fAuthReply] [bit] NOT NULL,
- CONSTRAINT [PK_tUserAuth] PRIMARY KEY CLUSTERED 
+	[fLoginTime] [datetime] NULL,
+	[fLogoutTime] [datetime] NULL,
+	[fErrorPasswordCount] [int] NULL,
+	[fUserIP] [nvarchar](20) NULL
+ CONSTRAINT [PK_tUserLog] PRIMARY KEY CLUSTERED 
 (
 	[fId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+GO
+/****** Object: 網站管理員 ******/
+/****** Object:  Table [dbo].[tAdminManager]    Script Date: 2020/2/6 下午 11:07:59 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[tAdminManager](
+	[ManagerId] [nvarchar](50) NOT NULL,
+	[ManagerPassword] [nvarchar](50) NOT NULL,
+	[ManagerPasswordSalt] [nvarchar](max) NULL,
+	[ManagerEmail] [nvarchar](50) NOT NULL,
+	[ManagerAuth] [int] NOT NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 /******會員瀏覽商品紀錄清單 ******/
 /****** Object:  Table [dbo].[tUserBrowseHistory]    Script Date: 2020/2/5 上午 12:38:29 ******/
@@ -584,7 +575,6 @@ CREATE TABLE [dbo].[tUserDiscountList](
 GO
 
 /****** Object:  會員收藏文章清單 ******/
-/****** 將fUserId欄位改為fId ******/
 /****** Object:  Table [dbo].[tUserFavorite]    Script Date: 2020/1/30 下午 04:20:44 ******/
 SET ANSI_NULLS ON
 GO
@@ -592,10 +582,11 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tUserFavorite](
 	[fId] [int] NOT NULL,
-	[fPostId] [int] NOT NULL,
+	[fPostId] [int] NOT NULL
  CONSTRAINT [PK_tUserFavorite] PRIMARY KEY CLUSTERED 
 (
-	[fId] ASC
+	[fId] ASC,
+	[fPostId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -617,32 +608,29 @@ CREATE TABLE [dbo].[tUserProductFavorite](
 ) ON [PRIMARY]
 GO
 /****** Object:  會員主表--個人資料 ******/
-/****** 加入fId欄位，並將fId設為PK ******/
-/****** 刪除fEmail欄位 ******/
-/****** fGender欄位不允許null ******/
-/****** fBirthday欄位資料型態改為datetime ******/
-/****** fCreateDate欄位資料型態改為datetime ******/
-/****** fAddress欄位資料型態改為nvarchar(MAX) ******/
-/****** fUserId內容改為填寫Email資料，fUserId欄位資料型態改為nvarchar(50) ******/
-/****** Object:  Table [dbo].[tUserProfile]    Script Date: 2020/1/30 下午 04:20:44 ******/
+/****** Object:  Table [dbo].[tUserProfile]   Script Date: 2020/2/6 下午 11:07:59 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tUserProfile](
 	[fId] [int] IDENTITY(1,1) NOT NULL,
-		[fUserId] [nvarchar](20) NOT NULL,
+	[fUserId] [nvarchar](50) NOT NULL,
+	[fPassword] [nvarchar](50) NOT NULL,
+	[fPasswordSalt] [nvarchar](max) NULL,
 	[fName] [nvarchar](50) NOT NULL,
 	[fGender] [nvarchar](20) NOT NULL,
 	[fBirthday] [datetime] NOT NULL,
 	[fTel] [nvarchar](50) NULL,
 	[fPhone] [nvarchar](50) NOT NULL,
-	[fEmail] [nvarchar](50) NOT NULL,
 	[fCity] [nvarchar](50) NOT NULL,
 	[fAddress] [nvarchar](max) NOT NULL,
 	[fPhoto] [nvarchar](max) NULL,
-	[fCreateDate] [datetime] NULL,
+	[fCreateDate] [datetime] NOT NULL,
 	[fScore] [int] NULL,
+	[fAuth] [nvarchar](50) NOT NULL,
+	[fAuthPost] [bit] NOT NULL,
+	[fAuthReply] [bit] NOT NULL,
  CONSTRAINT [PK_tUserProfile] PRIMARY KEY CLUSTERED 
 (
 	[fId] ASC
@@ -791,15 +779,10 @@ REFERENCES [dbo].[tUserProfile] ([fId])
 GO
 ALTER TABLE [dbo].[tTest] CHECK CONSTRAINT [FK_tTest_tUserProfile]
 GO
-ALTER TABLE [dbo].[tUser]  WITH CHECK ADD  CONSTRAINT [FK_tUser_tUserProfile] FOREIGN KEY([fId])
+ALTER TABLE [dbo].[tUserLog]  WITH CHECK ADD  CONSTRAINT [FK_tUserLog_tUserProfile] FOREIGN KEY([fId])
 REFERENCES [dbo].[tUserProfile] ([fId])
 GO
-ALTER TABLE [dbo].[tUser] CHECK CONSTRAINT [FK_tUser_tUserProfile]
-GO
-ALTER TABLE [dbo].[tUserAuth]  WITH CHECK ADD  CONSTRAINT [FK_tUserAuth_tUser] FOREIGN KEY([fId])
-REFERENCES [dbo].[tUser] ([fId])
-GO
-ALTER TABLE [dbo].[tUserAuth] CHECK CONSTRAINT [FK_tUserAuth_tUser]
+ALTER TABLE [dbo].[tUserLog] CHECK CONSTRAINT [FK_tUserLog_tUserProfile]
 GO
 ALTER TABLE [dbo].[tUserBrowseHistory]  WITH CHECK ADD  CONSTRAINT [FK_tUserBrowseHistory_tProduct] FOREIGN KEY([fProductId])
 REFERENCES [dbo].[tProduct] ([fProductID])
@@ -820,11 +803,6 @@ ALTER TABLE [dbo].[tUserDiscountList]  WITH CHECK ADD  CONSTRAINT [FK_tUserDisco
 REFERENCES [dbo].[tUserProfile] ([fId])
 GO
 ALTER TABLE [dbo].[tUserDiscountList] CHECK CONSTRAINT [FK_tUserDiscountList_tUserProfile]
-GO
-ALTER TABLE [dbo].[tUserFavorite]  WITH CHECK ADD  CONSTRAINT [FK_tUserFavorite_tUser] FOREIGN KEY([fId])
-REFERENCES [dbo].[tUser] ([fId])
-GO
-ALTER TABLE [dbo].[tUserFavorite] CHECK CONSTRAINT [FK_tUserFavorite_tUser]
 GO
 ALTER TABLE [dbo].[tUserFavorite]  WITH CHECK ADD  CONSTRAINT [FK_tUserFavorite_tUserFavorite] FOREIGN KEY([fPostId])
 REFERENCES [dbo].[tForum] ([fPostId])
