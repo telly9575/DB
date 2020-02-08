@@ -526,7 +526,7 @@ CREATE TABLE [dbo].[tUserLog](
 ) ON [PRIMARY]
 GO
 /****** Object: 網站管理員 ******/
-/****** Object:  Table [dbo].[tAdminManager]    Script Date: 2020/2/6 下午 11:07:59 ******/
+/****** Object:  Table [dbo].[tAdminManager]    Script Date: 2020/2/8 下午 16:36:59 更新******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -537,7 +537,11 @@ CREATE TABLE [dbo].[tAdminManager](
 	[ManagerPasswordSalt] [nvarchar](max) NULL,
 	[ManagerEmail] [nvarchar](50) NOT NULL,
 	[ManagerAuth] [int] NOT NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+) CONSTRAINT [PK_tAdminManager] PRIMARY KEY CLUSTERED 
+(
+	[ManagerId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
 GO
 /******會員瀏覽商品紀錄清單 ******/
 /****** Object:  Table [dbo].[tUserBrowseHistory]    Script Date: 2020/2/5 上午 12:38:29 ******/
