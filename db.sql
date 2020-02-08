@@ -526,7 +526,7 @@ CREATE TABLE [dbo].[tUserLog](
 ) ON [PRIMARY]
 GO
 /****** Object: 網站管理員 ******/
-/****** Object:  Table [dbo].[tAdminManager]    Script Date: 2020/2/8 下午 16:36:59 更新******/
+/****** Object:  Table [dbo].[tAdminManager]    Script Date: 2020/2/8 下午 17:12:30 更新******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -536,8 +536,8 @@ CREATE TABLE [dbo].[tAdminManager](
 	[ManagerPassword] [nvarchar](50) NOT NULL,
 	[ManagerPasswordSalt] [nvarchar](max) NULL,
 	[ManagerEmail] [nvarchar](50) NOT NULL,
-	[ManagerAuth] [int] NOT NULL
-) CONSTRAINT [PK_tAdminManager] PRIMARY KEY CLUSTERED 
+	[ManagerAuth] [int] NOT NULL,
+ CONSTRAINT [PK_tAdminManager] PRIMARY KEY CLUSTERED 
 (
 	[ManagerId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
