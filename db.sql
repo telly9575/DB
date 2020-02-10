@@ -281,7 +281,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tOrder](
-	[fOrderId] [bigint] IDENTITY(1000,1) NOT NULL,
+	[fOrderId] [int] IDENTITY(1000,1) NOT NULL,
 	[fId] [int] NOT NULL,
 	[fOrderDate] [datetime] NOT NULL,
 	[fShippedDate] [datetime] NULL,
@@ -311,7 +311,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tOrderDetail](
-	[fOrderId] [bigint] NOT NULL,
+	[fOrderId] [int] NOT NULL,
 	[fProductId] [int] NOT NULL,
 	[fUnitPrice] [int] NULL,
 	[fOrderQuantity] [int] NULL,
