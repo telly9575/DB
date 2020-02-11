@@ -275,19 +275,13 @@ CREATE TABLE [dbo].[tNote](
 GO
 
 /****** Object:  訂單主表 ******/
-/****** 刪除[fOrderCheck]欄位   Edit Date: 2020/2/03 下午 02:15:43******/
-/****** 更改[fOrderDate]資料型態   Edit Date: 2020/2/03 下午 02:15:43******/
-/****** 更改[fShippedDate]]資料型態   Edit Date: 2020/2/03 下午 02:15:43******/
-/****** 更改[fRequiredDate]資料型態   Edit Date: 2020/2/03 下午 02:15:43******/
-/****** 更改[fOrderPostScript]資料型態   Edit Date: 2020/2/03 下午 02:15:43******/
-/****** 更改[fConsigneeName]資料型態   Edit Date: 2020/2/03 下午 02:15:43******/
-/****** Object:  Table [dbo].[tOrder]    Script Date: 2020/1/30 下午 04:20:43 ******/
+/****** Object:  Table [dbo].[tOrder]    Script Date: 2020/2/10 上午 06:53:43 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tOrder](
-	[fOrderId] [bigint] IDENTITY(1000,1) NOT NULL,
+	[fOrderId] [int] IDENTITY(1000,1) NOT NULL,
 	[fId] [int] NOT NULL,
 	[fOrderDate] [datetime] NOT NULL,
 	[fShippedDate] [datetime] NULL,
@@ -300,6 +294,7 @@ CREATE TABLE [dbo].[tOrder](
 	[fOrderCompanyTitle] [nvarchar](50) NULL,
 	[fOrderTaxIdDNumber] [int] NULL,
 	[fOrderPostScript] [nvarchar](max) NULL,
+	[fDiscountCode] [nvarchar](50) NULL,
 	[fPayment] [nvarchar](50) NULL,
  CONSTRAINT [PK_tOrder] PRIMARY KEY CLUSTERED 
 (
@@ -316,8 +311,9 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tOrderDetail](
-	[fOrderId] [bigint] NOT NULL,
+	[fOrderId] [int] NOT NULL,
 	[fProductId] [int] NOT NULL,
+	[fUnitPrice] [int] NULL,
 	[fOrderQuantity] [int] NULL,
  CONSTRAINT [PK_tOrderDetail] PRIMARY KEY CLUSTERED 
 (
