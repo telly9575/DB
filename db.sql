@@ -79,6 +79,7 @@ ALTER DATABASE [dbShoppingForum] SET QUERY_STORE = OFF
 GO
 USE [dbShoppingForum]
 GO
+
 /****** Object:  商品分類表 (供商品檢索&分類用) ******/
 /****** Object:  Table [dbo].[tCategory]    Script Date: 2020/1/30 下午 04:20:43 ******/
 SET ANSI_NULLS ON
@@ -258,6 +259,51 @@ CREATE TABLE [dbo].[tForumReplyAnalysis](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+/****** Object:  最新消息文章  ******/
+/****** Object:  Table [dbo].[tNews]    Script Date: 2020/2/14 下午 03:20:45 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[tNews](
+	[fNewsId] [int] NOT NULL,
+	[fNewsStart] [datetime] NOT NULL,
+	[fNewsEnd] [datetime] NOT NULL,
+	[fClass] [nvarchar](50) NULL,
+	[fNewsTitle] [nvarchar](50) NOT NULL,
+	[fNewsDesc] [nvarchar](100) NOT NULL,
+	[fNewsArticle] [nvarchar](max) NOT NULL,
+	[fNewsTag] [int] NULL,
+	[fGet_No] [int] NULL,
+	[fAddUser] [nvarchar](50) NOT NULL,
+	[fChangUser] [nvarchar](50) NULL,
+	[fDeleteUser] [nvarchar](50) NULL,
+	[fApproved] [char](1) NULL,
+ CONSTRAINT [PK_tNews] PRIMARY KEY CLUSTERED 
+(
+	[fNewsId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  最新消息留言區  ******/
+/****** Object:  Table [dbo].[tNewsMessage]    Script Date: 2020/2/14 下午 03:20:45 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[tNewsMessage](
+	[fMessageId] [int] NOT NULL,
+	[fNewsId] [int] NOT NULL,
+	[fMessageTime] [datetime] NOT NULL,
+	[fMessageArticle] [varchar](max) NULL,
+	[fM_AddUser] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_tMessage] PRIMARY KEY CLUSTERED 
+(
+	[fMessageId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
 /****** Object:  商品精油香調表 (供單方精油檢索&分類用) ******/
 /****** Object:  Table [dbo].[tNote]    Script Date: 2020/1/30 下午 04:20:43 ******/
 SET ANSI_NULLS ON
@@ -424,6 +470,7 @@ CREATE TABLE [dbo].[tProductVegetableoil](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+/****** Object:  每日題目區  ******/
 /****** Object:  Table [dbo].[tQuestion]    Script Date: 2020/1/30 下午 04:20:43 ******/
 SET ANSI_NULLS ON
 GO
@@ -445,6 +492,7 @@ CREATE TABLE [dbo].[tQuestion](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
+/****** Object:  積分異動表  ******/
 /****** Object:  Table [dbo].[tScore]    Script Date: 2020/1/30 下午 04:20:43 ******/
 SET ANSI_NULLS ON
 GO
@@ -481,6 +529,8 @@ CREATE TABLE [dbo].[tShoppingCart](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
+/****** Object:  測驗積分表  ******/
 /****** Object:  Table [dbo].[tTest]    Script Date: 2020/1/30 下午 04:20:43 ******/
 SET ANSI_NULLS ON
 GO
@@ -582,7 +632,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tUserFavorite](
 	[fId] [int] NOT NULL,
-	[fPostId] [int] NOT NULL
+	[fPostId] [int] NOT NULL,
+	[fIsFavorite] [bit] NULL,
  CONSTRAINT [PK_tUserFavorite] PRIMARY KEY CLUSTERED 
 (
 	[fId] ASC,
@@ -689,6 +740,11 @@ REFERENCES [dbo].[tUserProfile] ([fId])
 GO
 ALTER TABLE [dbo].[tForumReplyAnalysis] CHECK CONSTRAINT [FK_tForumReplyAnalysis_tUserProfile]
 GO
+ALTER TABLE [dbo].[tNewsMessage]  WITH CHECK ADD  CONSTRAINT [FK_tNewsMessage_tNews] FOREIGN KEY([fNewsId])
+REFERENCES [dbo].[tNews] ([fNewsId])
+GO
+ALTER TABLE [dbo].[tNewsMessage] CHECK CONSTRAINT [FK_tNewsMessage_tNews]
+GO
 ALTER TABLE [dbo].[tOrder]  WITH CHECK ADD  CONSTRAINT [FK_tOrder_tUser] FOREIGN KEY([fId])
 REFERENCES [dbo].[tUserProfile] ([fId])
 GO
@@ -774,16 +830,6 @@ REFERENCES [dbo].[tScore] ([fId])
 GO
 ALTER TABLE [dbo].[tTest] CHECK CONSTRAINT [FK_tTest_fUserId]
 GO
-ALTER TABLE [dbo].[tTest]  WITH CHECK ADD  CONSTRAINT [FK_tTest_tUserProfile] FOREIGN KEY([fId])
-REFERENCES [dbo].[tUserProfile] ([fId])
-GO
-ALTER TABLE [dbo].[tTest] CHECK CONSTRAINT [FK_tTest_tUserProfile]
-GO
-ALTER TABLE [dbo].[tUserLog]  WITH CHECK ADD  CONSTRAINT [FK_tUserLog_tUserProfile] FOREIGN KEY([fId])
-REFERENCES [dbo].[tUserProfile] ([fId])
-GO
-ALTER TABLE [dbo].[tUserLog] CHECK CONSTRAINT [FK_tUserLog_tUserProfile]
-GO
 ALTER TABLE [dbo].[tUserBrowseHistory]  WITH CHECK ADD  CONSTRAINT [FK_tUserBrowseHistory_tProduct] FOREIGN KEY([fProductId])
 REFERENCES [dbo].[tProduct] ([fProductID])
 GO
@@ -808,6 +854,11 @@ ALTER TABLE [dbo].[tUserFavorite]  WITH CHECK ADD  CONSTRAINT [FK_tUserFavorite_
 REFERENCES [dbo].[tForum] ([fPostId])
 GO
 ALTER TABLE [dbo].[tUserFavorite] CHECK CONSTRAINT [FK_tUserFavorite_tUserFavorite]
+GO
+ALTER TABLE [dbo].[tUserLog]  WITH CHECK ADD  CONSTRAINT [FK_tUserLog_tUserProfile] FOREIGN KEY([fId])
+REFERENCES [dbo].[tUserProfile] ([fId])
+GO
+ALTER TABLE [dbo].[tUserLog] CHECK CONSTRAINT [FK_tUserLog_tUserProfile]
 GO
 ALTER TABLE [dbo].[tUserProductFavorite]  WITH CHECK ADD  CONSTRAINT [FK_tUserProductFavorite_tProduct] FOREIGN KEY([fProductId])
 REFERENCES [dbo].[tProduct] ([fProductID])
