@@ -632,7 +632,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tUserFavorite](
 	[fId] [int] NOT NULL,
-	[fPostId] [int] NOT NULL
+	[fPostId] [int] NOT NULL,
+	[fIsFavorite] [bit] NULL,
  CONSTRAINT [PK_tUserFavorite] PRIMARY KEY CLUSTERED 
 (
 	[fId] ASC,
