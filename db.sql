@@ -251,11 +251,12 @@ CREATE TABLE [dbo].[tForumReplyAnalysis](
 	[fPostId] [int] NOT NULL,
 	[fReplyId] [nvarchar](50) NOT NULL,
 	[fId] [int] NOT NULL,
-	[fLikeHate] [bit] NOT NULL,
+	[fLikeHate] [bit] NULL,
  CONSTRAINT [PK_tForumReplyAnalysis] PRIMARY KEY CLUSTERED 
 (
 	[fPostId] ASC,
-	[fReplyId] ASC
+	[fReplyId] ASC,
+        [fId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
