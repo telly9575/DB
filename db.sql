@@ -562,14 +562,12 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tUserLog](
 	[fId] [int] NOT NULL,
-	[fLoginTime] [datetime] NULL,
+	[fLoginTime] [datetime] NOT NULL,
 	[fLogoutTime] [datetime] NULL,
 	[fErrorPasswordCount] [int] NULL,
-	[fUserIP] [nvarchar](20) NULL
- CONSTRAINT [PK_tUserLog] PRIMARY KEY CLUSTERED 
-(
-	[fId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	[fUserIP] [nvarchar](20) NULL,
+	[fpw_reset_action_date] [datetime] NULL,
+	[fpw_reset_authcode] [nvarchar](200) NULL
 ) ON [PRIMARY]
 GO
 /****** Object: 網站管理員 ******/
