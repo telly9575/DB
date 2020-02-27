@@ -262,6 +262,7 @@ CREATE TABLE [dbo].[tForumReplyAnalysis](
 ) ON [PRIMARY]
 GO
 /****** Object:  最新消息文章  ******/
+/****** Object:  0227增加fNewsDiscontinue欄位  ******/
 /****** Object:  Table [dbo].[tNews]    Script Date: 2020/2/14 下午 03:20:45 ******/
 SET ANSI_NULLS ON
 GO
@@ -281,6 +282,7 @@ CREATE TABLE [dbo].[tNews](
 	[fChangUser] [nvarchar](50) NULL,
 	[fDeleteUser] [nvarchar](50) NULL,
 	[fApproved] [char](1) NULL,
+	[fNewsDiscontinue][bit] NULL,
  CONSTRAINT [PK_tNews] PRIMARY KEY CLUSTERED 
 (
 	[fNewsId] ASC
@@ -561,13 +563,9 @@ CREATE TABLE [dbo].[tTest](
 	[fTestId] [int] IDENTITY(1,1) NOT NULL,
 	[fId] [int] NOT NULL,
 	[fQuestionId] [int] NOT NULL,
-	[fTestStar] [datetime] NULL,
-	[fTestEnd] [datetime] NULL,
-	[fTestCost] [datetime] NULL,
-	[fQuestionCount] [int] NULL,
-	[fCorrectCount] [int] NULL,
 	[fScoreDate] [datetime] NULL,
 	[fQuestionScore] [int] NULL,
+	[fTestDiscontinue][bit] NULL,
  CONSTRAINT [PK_tTest] PRIMARY KEY CLUSTERED 
 (
 	[fTestId] ASC
@@ -587,7 +585,12 @@ CREATE TABLE [dbo].[tUserLog](
 	[fErrorPasswordCount] [int] NULL,
 	[fUserIP] [nvarchar](20) NULL,
 	[fpw_reset_action_date] [datetime] NULL,
-	[fpw_reset_authcode] [nvarchar](200) NULL
+	[fpw_reset_authcode] [nvarchar](200) NULL,
+ CONSTRAINT [PK_tUserLog] PRIMARY KEY CLUSTERED 
+(
+	[fId] ASC,
+	[fLoginTime] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
 /****** Object: 網站管理員 ******/
