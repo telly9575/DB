@@ -112,6 +112,7 @@ CREATE TABLE [dbo].[tDiscount](
 	[fStartdate] [datetime] NOT NULL,
 	[fEndDate] [datetime] NOT NULL,
 	[fEnable] [bit] NOT NULL,
+	[fCount] [int] NOT NULL,
  CONSTRAINT [PK_tDiscount] PRIMARY KEY CLUSTERED 
 (
 	[fDiscountCode] ASC
@@ -286,6 +287,25 @@ CREATE TABLE [dbo].[tNews](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
+
+/****** Object:  LineBot帳號連結主表  ******/
+/****** Object:  Table [dbo].[tLineBotAccountLink]    Script Date: 2020/2/27 上午 12:55:09 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[tLineBotAccountLink](
+	[fId] [int] NOT NULL,
+	[fLineNonce] [nvarchar](50) NULL,
+	[fLineUserId] [nvarchar](50) NULL,
+	[fAccountLinkDatetime] [datetime] NULL,
+ CONSTRAINT [PK_tLineBotAccountLink] PRIMARY KEY CLUSTERED 
+(
+	[fId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
 /****** Object:  最新消息留言區  ******/
 /****** Object:  Table [dbo].[tNewsMessage]    Script Date: 2020/2/14 下午 03:20:45 ******/
 SET ANSI_NULLS ON
@@ -738,6 +758,11 @@ ALTER TABLE [dbo].[tForumReplyAnalysis]  WITH CHECK ADD  CONSTRAINT [FK_tForumRe
 REFERENCES [dbo].[tUserProfile] ([fId])
 GO
 ALTER TABLE [dbo].[tForumReplyAnalysis] CHECK CONSTRAINT [FK_tForumReplyAnalysis_tUserProfile]
+GO
+ALTER TABLE [dbo].[tLineBotAccountLink]  WITH CHECK ADD  CONSTRAINT [FK_tLineBotAccountLink_tUserProfile] FOREIGN KEY([fId])
+REFERENCES [dbo].[tUserProfile] ([fId])
+GO
+ALTER TABLE [dbo].[tLineBotAccountLink] CHECK CONSTRAINT [FK_tLineBotAccountLink_tUserProfile]
 GO
 ALTER TABLE [dbo].[tNewsMessage]  WITH CHECK ADD  CONSTRAINT [FK_tNewsMessage_tNews] FOREIGN KEY([fNewsId])
 REFERENCES [dbo].[tNews] ([fNewsId])
