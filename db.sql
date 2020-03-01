@@ -262,14 +262,14 @@ CREATE TABLE [dbo].[tForumReplyAnalysis](
 ) ON [PRIMARY]
 GO
 /****** Object:  最新消息文章  ******/
-/****** Object:  0227增加fNewsDiscontinue欄位  ******/
+/****** Object:  0229增加自動識別鑑  ******/
 /****** Object:  Table [dbo].[tNews]    Script Date: 2020/2/14 下午 03:20:45 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tNews](
-	[fNewsId] [int] NOT NULL,
+	[fNewsId] [int] IDENTITY(1,1) NOT NULL,
 	[fNewsStart] [datetime] NOT NULL,
 	[fNewsEnd] [datetime] NOT NULL,
 	[fClass] [nvarchar](50) NULL,
@@ -282,7 +282,7 @@ CREATE TABLE [dbo].[tNews](
 	[fChangUser] [nvarchar](50) NULL,
 	[fDeleteUser] [nvarchar](50) NULL,
 	[fApproved] [char](1) NULL,
-	[fNewsDiscontinue][bit] NULL,
+	[fNewsDiscontinue] [bit] NULL,
  CONSTRAINT [PK_tNews] PRIMARY KEY CLUSTERED 
 (
 	[fNewsId] ASC
@@ -516,21 +516,23 @@ CREATE TABLE [dbo].[tQuestion](
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 /****** Object:  積分異動表  ******/
+/****** Object:  0229增加主鍵  ******/
 /****** Object:  Table [dbo].[tScore]    Script Date: 2020/1/30 下午 04:20:43 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tScore](
+	[fScoreId] [int] IDENTITY(1,1) NOT NULL,
 	[fId] [int] NOT NULL,
-	[fScore] [int] NULL,
-	[fActiveScore] [int] NULL,
-	[fQuestionScore] [int] NULL,
-	[fScoreDate] [datetime] NULL,
-	[fAuthTestFlag] [bit] NULL,
+	[fScore] [int] NOT NULL,
+	[fActiveScore] [int] NOT NULL,
+	[fQuestionScore] [int] NOT NULL,
+	[fScoreDate] [datetime] NOT NULL,
+	[fScoreDiscontinue] [bit] NOT NULL,
  CONSTRAINT [PK_tScore] PRIMARY KEY CLUSTERED 
 (
-	[fId] ASC
+	[fScoreId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -563,9 +565,9 @@ CREATE TABLE [dbo].[tTest](
 	[fTestId] [int] IDENTITY(1,1) NOT NULL,
 	[fId] [int] NOT NULL,
 	[fQuestionId] [int] NOT NULL,
-	[fScoreDate] [datetime] NULL,
+	[fScoreDate] [datetime] NOT NULL,
 	[fQuestionScore] [int] NULL,
-	[fTestDiscontinue][bit] NULL,
+	[fTestDiscontinue] [bit] NULL,
  CONSTRAINT [PK_tTest] PRIMARY KEY CLUSTERED 
 (
 	[fTestId] ASC
@@ -832,10 +834,10 @@ REFERENCES [dbo].[tProduct] ([fProductID])
 GO
 ALTER TABLE [dbo].[tProductVegetableoil] CHECK CONSTRAINT [FK_tProductVegetableoil_tProduct]
 GO
-ALTER TABLE [dbo].[tScore]  WITH CHECK ADD  CONSTRAINT [FK_tScore_tUserProfile] FOREIGN KEY([fId])
+ALTER TABLE [dbo].[tScore]  WITH CHECK ADD  CONSTRAINT [FK_tScore_tUserProfile1] FOREIGN KEY([fId])
 REFERENCES [dbo].[tUserProfile] ([fId])
 GO
-ALTER TABLE [dbo].[tScore] CHECK CONSTRAINT [FK_tScore_tUserProfile]
+ALTER TABLE [dbo].[tScore] CHECK CONSTRAINT [FK_tScore_tUserProfile1]
 GO
 ALTER TABLE [dbo].[tShoppingCart]  WITH CHECK ADD  CONSTRAINT [FK_tShoppingCart_tProduct] FOREIGN KEY([fProductID])
 REFERENCES [dbo].[tProduct] ([fProductID])
@@ -852,10 +854,11 @@ REFERENCES [dbo].[tQuestion] ([fQuestionId])
 GO
 ALTER TABLE [dbo].[tTest] CHECK CONSTRAINT [FK_tTest_fQuestionId]
 GO
-ALTER TABLE [dbo].[tTest]  WITH CHECK ADD  CONSTRAINT [FK_tTest_fUserId] FOREIGN KEY([fId])
-REFERENCES [dbo].[tScore] ([fId])
+/**** 變更fid的FK **********/
+ALTER TABLE [dbo].[tTest]  WITH CHECK ADD  CONSTRAINT [FK_tTest_tUserProfile] FOREIGN KEY([fId])
+REFERENCES [dbo].[tUserProfile] ([fId])
 GO
-ALTER TABLE [dbo].[tTest] CHECK CONSTRAINT [FK_tTest_fUserId]
+ALTER TABLE [dbo].[tTest] CHECK CONSTRAINT [FK_tTest_tUserProfile]
 GO
 ALTER TABLE [dbo].[tUserBrowseHistory]  WITH CHECK ADD  CONSTRAINT [FK_tUserBrowseHistory_tProduct] FOREIGN KEY([fProductId])
 REFERENCES [dbo].[tProduct] ([fProductID])
